@@ -22,7 +22,8 @@ def save_config(data):
 config = load_config()
 
 ADB_PORT = config["ADB_PORT"]
-
+# --- WALL UPGRADE LOGIC TOGGLE ---
+IS_UPGRADE_WALL = config["IS_UPGRADE_WALL"]
 MINIMUM_GOLD = config["MINIMUM_GOLD"]
 MINIMUM_ELIXIR = config["MINIMUM_ELIXIR"]
 TOTAL_TROOPS = config["TOTAL_TROOPS"]
