@@ -1,0 +1,10 @@
+[21:20:54] Watchdog triggered. Attempting recovery.
+[21:26:22] Watchdog triggered. Attempting recovery.
+[21:31:49] Watchdog triggered. Attempting recovery.
+[21:37:17] Watchdog triggered. Attempting recovery.
+[21:42:46] Watchdog triggered. Attempting recovery.
+[21:48:14] Watchdog triggered. Attempting recovery.
+[21:53:42] Watchdog triggered. Attempting recovery.
+[21:59:10] Watchdog triggered. Attempting recovery.
+[22:13:44] Watchdog triggered. Attempting recovery.
+[22:19:12] Watchdog triggered. Attempting recovery.

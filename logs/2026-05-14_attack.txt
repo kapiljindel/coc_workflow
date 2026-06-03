@@ -1,0 +1,103 @@
+[07:22:43] Initiating One-Side Edge Spam Deployment.
+[07:22:45] Target Path Locked. Dropping 5 chunks on one edge.
+[07:23:41] Deployment Verified: ALL CLEAR.
+[07:24:37] Initiating One-Side Edge Spam Deployment.
+[07:25:32] Initiating One-Side Edge Spam Deployment.
+[07:26:42] Initiating One-Side Edge Spam Deployment.
+[07:26:45] Target Path Locked. Dropping 6 chunks on one edge.
+[07:30:49] Initiating One-Side Edge Spam Deployment.
+[07:30:51] Target Path Locked. Dropping 7 chunks on one edge.
+[09:25:34] Selected barbarian card.
+[09:25:35] Starting One-Side Edge Spam for 220 barbarians.
+[09:58:53] Selected barbarian card via image.
+[09:58:53] Starting One-Side Edge Spam for 220 barbarians.
+[09:59:52] barbarian deployment verified complete.
+[10:03:00] Selected barbarian card via image.
+[10:03:01] Starting One-Side Edge Spam for 220 barbarians.
+[10:04:02] barbarian deployment verified complete.
+[10:15:02] Selected barbarian card via image.
+[10:15:02] Starting One-Side Edge Spam for 220 barbarians.
+[10:19:49] Selected barbarian card via image.
+[10:19:49] Starting One-Side Edge Spam for 220 barbarians.
+[10:21:00] barbarian deployment verified complete.
+[10:21:46] Selected barbarian card via image.
+[10:21:47] Starting One-Side Edge Spam for 220 barbarians.
+[10:23:23] Selected barbarian card via image.
+[10:23:23] Starting One-Side Edge Spam for 220 barbarians.
+[10:24:44] Starting One-Side Edge Spam for 220 barbarians.
+[10:34:28] Starting One-Side Edge Spam for 220 barbarians.
+[10:40:39] Dropping 120 barbarians in 7 bunches: [5, 48, 7, 3, 12, 34, 11]
+[10:44:36] Dropping 120 barbarians in 8 bunches: [41, 4, 24, 8, 14, 6, 13, 10]
+[10:49:24] Dropping 120 barbarians in 7 bunches: [26, 38, 8, 5, 7, 6, 30]
+[10:52:31] Dropping 120 barbarians in 8 bunches.
+[10:57:32] Dropping 120 barbarians in 7 bunches.
+[11:02:38] Dropping 120 barbarians in 4 bunches.
+[11:03:41] Dropping 12 barbarians in 8 bunches.
+[11:07:45] Dropping 12 barbarians in 5 bunches.
+[11:11:52] Dropping 120 barbarians along dynamic path.
+[11:14:20] Dropping 120 barbarians along dynamic path.
+[11:17:10] Dropping 120 barbarians along dynamic path.
+[11:21:10] Dropping 120 barbarians along dynamic path.
+[11:26:25] Dropping 120 barbarians on Bottom-Right.
+[11:29:25] Dropping 12 barbarians on Top-Left.
+[11:33:25] Dropping 12 barbarians on Bottom-Right.
+[11:35:45] Dropping 12 barbarians on Bottom-Left.
+[11:39:50] Dropping 12 barbarians on Bottom-Right.
+[11:41:39] Dropping 12 barbarians on Top-Right.
+[11:45:29] Dropping 12 barbarians on Top-Left.
+[11:48:59] Dropping 12 barbarians on Top-Right.
+[11:51:35] Dropping 12 barbarians on Top-Left.
+[11:55:06] Dropping 12 barbarians on Bottom-Left.
+[11:59:07] Dropping 12 barbarians on Top-Left.
+[12:00:56] Dropping 12 barbarians on Top-Left.
+[12:04:45] Dropping 12 barbarians on Top-Right.
+[12:09:03] Dropping 120 barbarians on Top-Left.
+[12:12:59] Dropping 120 barbarians on Top-Left.
+[12:14:15] Dropping 120 barbarians on Bottom-Left.
+[12:18:38] Dropping 120 barbarians on Bottom-Left.
+[12:20:11] Dropping 120 barbarians on Bottom-Left.
+[12:24:32] Dropping 120 barbarians on Top-Right.
+[12:25:49] Dropping 120 barbarians on Top-Left.
+[12:29:53] Dropping 120 barbarians on Bottom-Left.
+[12:33:53] Dropping 120 barbarians on Top-Right.
+[12:37:58] Dropping 120 barbarians on Top-Left.
+[12:42:13] Dropping 120 barbarians on Top-Right.
+[12:53:57] Dropping 9 dragons on Bottom-Right.
+[12:54:53] Dropping 1 kings on Bottom-Left.
+[12:58:52] Dropping 9 dragons on Bottom-Left.
+[13:35:01] Dropping 9 dragons on Bottom-Right.
+[13:36:02] Dropping 1 kings on Top-Left.
+[13:36:40] Dropping 1 queens on Bottom-Left.
+[13:37:17] Dropping 1 wardens on Top-Right.
+[13:37:54] Dropping 4 rages on Top-Left.
+[13:38:38] Dropping 1 freezes on Top-Right.
+[13:40:20] Dropping 9 dragons on Top-Left.
+[13:43:12] Dropping 9 dragons on Top-Right.
+[13:45:46] Dropping 9 dragons on Bottom-Left.
+[13:46:37] Dropping 1 kings on Top-Left.
+[13:47:07] Dropping 1 queens on Bottom-Left.
+[13:47:37] Dropping 1 wardens on Bottom-Right.
+[13:48:04] Dropping 4 rages on Bottom-Left.
+[13:48:37] Dropping 1 freezes on Top-Right.
+[13:49:32] Dropping 9 dragons on Top-Right.
+[13:50:14] Dropping 1 kings on Bottom-Left.
+[13:50:43] Dropping 1 queens on Bottom-Left.
+[13:52:59] Dropping 9 dragons on Bottom-Left.
+[14:07:54] Dropping 9 dragons on Bottom-Right.
+[14:08:35] Dropping 1 kings on Bottom-Left.
+[14:12:27] Dropping 9 dragons on Top-Left.
+[14:13:13] Dropping 1 kings on Top-Right.
+[14:14:36] Dropping 9 dragons on Bottom-Left.
+[14:22:58] Dropping 9 dragons on Top-Left.
+[14:23:37] Dropping 1 kings on Bottom-Right.
+[14:24:08] Dropping 1 queens on Bottom-Left.
+[14:27:06] Dropping 9 dragons on Bottom-Right.
+[14:27:41] Dropping 1 kings on Top-Left.
+[14:28:12] Dropping 1 queens on Bottom-Left.
+[15:11:25] Dropping 9 dragons on Top-Left.
+[15:12:06] Dropping 1 kings on Bottom-Left.
+[15:12:36] Dropping 1 queens on Bottom-Right.
+[15:13:08] Dropping 4 freezes on Top-Left.
+[15:13:43] Dropping 1 rages on Bottom-Right.
+[20:43:00] Anti-Detection: Resting for 60s after 11 skips.
+[21:48:19] Anti-Detection: Resting after 12 skips.

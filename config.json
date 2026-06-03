@@ -1,0 +1,52 @@
+{
+    "ADB_PORT": 5555,
+    "MINIMUM_GOLD": 400000,
+    "MINIMUM_ELIXIR": 400000,
+    "TOTAL_TROOPS": 120,
+    "MAX_GOLD": 9250000,
+    "MAX_ELIXIR": 9250000,
+    "deploy_strategy": "single_side",
+    "Attack_type": [
+        "circle",
+        "all_sides",
+        "single_side",
+        "Random Side"
+    ],
+    "MY_ARMY": [
+        {
+            "name": "id1",
+            "category": "troop",
+            "count": 60
+        },
+        {
+            "name": "sieze machine",
+            "category": "hero",
+            "count": 1
+        },
+        {
+            "name": "king",
+            "category": "hero",
+            "count": 1
+        },
+        {
+            "name": "queen",
+            "category": "hero",
+            "count": 1
+        },
+        {
+            "name": "warden",
+            "category": "hero",
+            "count": 1
+        },
+        {
+            "name": "freeze",
+            "category": "spell",
+            "count": 3
+        },
+        {
+            "name": "rage",
+            "category": "spell",
+            "count": 1
+        }
+    ]
+}
