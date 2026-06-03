@@ -126,3 +126,4 @@
 [21:42:28] Attack Started. Gold: 494860 | Elixir: 495722
 [21:44:38] Attack Started. Gold: 519579 | Elixir: 518334
 [21:47:44] Attack Started. Gold: 762263 | Elixir: 580591
+[22:06:05] Attack Started. Gold: 0 | Elixir: 456641

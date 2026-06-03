@@ -24,6 +24,25 @@ from upgrade import find_and_click_lowest_cost_wall
 BOT_TOKEN = "7706951596:AAGg9LF6TV3csG4AW6Q9qu7hmhZp67wHhpQ"
 CHAT_ID = "#"
 
+def check_home_loot():
+    print("\n [Storage] Checking Home Village Vaults...")
+
+    screen_bytes = device.screencap()
+    screen_arr = np.frombuffer(screen_bytes, np.uint8)
+    screen = cv2.imdecode(screen_arr, cv2.IMREAD_COLOR)
+
+    home_gold = _extract_home_number(screen, HOME_GOLD_REGION, "img/debug_home_gold.png")
+    home_elixir = _extract_home_number(screen, HOME_ELIXIR_REGION, "img/debug_home_elixir.png")
+
+    gold_percent = (home_gold / MAX_GOLD) * 100
+    elixir_percent = (home_elixir / MAX_ELIXIR) * 100
+
+    print(f"Gold: {home_gold:,}/{MAX_GOLD:,} ({gold_percent:.1f}%)")
+    print(f"Elixir: {home_elixir:,}/{MAX_ELIXIR:,} ({elixir_percent:.1f}%)")
+
+    needs_upgrade = False
+    if gold_percent >= 90 or elixir_percent >= 90:
+        needs_upgrade = True
 
 def send_telegram_message(message):
     """Send Telegram alert."""
@@ -147,11 +166,17 @@ def check_home_loot():
     # =========================================================
     if needs_upgrade:
         if IS_UPGRADE_WALL:
-            print("\n [Trigger] Storage high & IS_UPGRADE_WALL is TRUE! Initiating wall upgrades...")
-            # Automatically burns loot into walls using your dynamic tap sequence
-            find_and_click_lowest_cost_wall(taps=5)
+            print("\n [Trigger] Storage high! Initiating wall safety scan...")
+            
+            # Pass the live gold and elixir counts straight into the function!
+            # We set max_taps=5, but the bot will auto-reduce this if your loot is too low.
+            find_and_click_lowest_cost_wall(
+                available_gold=home_gold, 
+                available_elixir=home_elixir
+               
+            )
         else:
-            print("\n [Trigger] Storage high but IS_UPGRADE_WALL is FALSE. Proceeding with default baseline loop.")
+            print("\n [Trigger] Storage high but IS_UPGRADE_WALL is FALSE. Skipping.")
 
     return home_gold, home_elixir, needs_upgrade
 
