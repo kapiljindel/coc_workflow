@@ -1,0 +1,14 @@
+[07:37:19] Attack Started. Gold: 415034 | Elixir: 138214
+[07:39:37] Attack Started. Gold: 1258007 | Elixir: 0
+[07:41:59] Attack Started. Gold: 672539 | Elixir: 719171
+[07:45:12] Attack Started. Gold: 416625 | Elixir: 51615
+[07:48:02] Attack Started. Gold: 0 | Elixir: 469568
+[07:50:11] Attack Started. Gold: 969914 | Elixir: 691755
+[07:52:43] Attack Started. Gold: 0 | Elixir: 439126
+[07:55:06] Attack Started. Gold: 591161 | Elixir: 468920
+[07:57:22] Attack Started. Gold: 605871 | Elixir: 568519
+[08:01:23] Attack Started. Gold: 1003679 | Elixir: 7721266
+[08:04:21] Attack Started. Gold: 545627 | Elixir: 989281
+[08:06:18] Attack Started. Gold: 595715 | Elixir: 0
+[08:10:12] Attack Started. Gold: 977910 | Elixir: 813477
+[08:12:53] Attack Started. Gold: 604315 | Elixir: 365382

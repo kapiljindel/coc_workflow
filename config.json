@@ -3,21 +3,22 @@
     "MINIMUM_GOLD": 400000,
     "MINIMUM_ELIXIR": 400000,
     "TOTAL_TROOPS": 120,
-    "MAX_GOLD": 10,
-    "MAX_ELIXIR": 10,
+    "MAX_GOLD": 4550000,
+    "MAX_ELIXIR": 4550000,
     "IS_UPGRADE_WALL": true,
     "deploy_strategy": "single_side",
     "Attack_type": [
         "circle",
         "all_sides",
-        "single_side",
+        "all_sides",
+        "single_point",
         "Random Side"
     ],
     "MY_ARMY": [
         {
             "name": "id1",
             "category": "troop",
-            "count": 620
+            "count": 100
         },
         {
             "name": "sieze machine",
