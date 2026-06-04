@@ -21,8 +21,8 @@ from upgrade import find_and_click_lowest_cost_wall
 # =========================================
 # TELEGRAM CONFIG
 # =========================================
-BOT_TOKEN = "7706951596:AAGg9LF6TV3csG4AW6Q9qu7hmhZp67wHhpQ"
-CHAT_ID = "#"
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
 
 def check_home_loot():
     print("\n [Storage] Checking Home Village Vaults...")

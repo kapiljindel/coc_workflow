@@ -38,13 +38,26 @@ SIMILAR_CHARS = {
     "9": ["q", "Q", "g"],
 }
 
+# Added the half-swipe function
+def scroll_half_down_builder_menu(region):
+    print(" [Scroll] Performing half-scroll lookahead...")
+    y1, y2, x1, x2 = region
+    start_x = (x1 + x2) // 2
+    start_y = int(y2 * 0.75)
+    end_y = int(y2 * 0.45)
+    from config import device
+    device.input_swipe(start_x, start_y, start_x, end_y, 400)
+
 def parse_wall_quantity(text_line):
-    """Extracts the number after 'x' or 'X' (e.g., 'Wall x12' -> 12)"""
-    match = re.search(r'wall\s*x\s*(\d+)', text_line, flags=re.I)
+    """Extracts the number after 'Wall', forgiving OCR mistakes on the 'x'."""
+    # \D* means "ignore any characters that are NOT numbers" (like ' ', 'x', '*', etc.)
+    # \d+ means "capture the first group of numbers you find" (which is the quantity)
+    match = re.search(r'wall\D*(\d+)', text_line, flags=re.I)
+    
     if match:
         return int(match.group(1))
     return 0  # Default to 0 if OCR misses it entirely to avoid blind tapping
-
+    
 def parse_wall_cost(text_line):
     if "wall" not in text_line.lower():
         return None
@@ -59,6 +72,40 @@ def parse_wall_cost(text_line):
         if digits:
             numbers.append(int(digits))
     return max(numbers) if numbers else None
+
+# Grouped your exact OCR logic here so we can call it twice (before and after swipe)
+def scan_crop_for_walls(crop, x1, y1):
+    gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
+    inverted = cv2.bitwise_not(gray)
+    bigger = cv2.resize(inverted, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+    
+    d = pytesseract.image_to_data(bigger, config=r'--psm 6', output_type=Output.DICT)
+    
+    lines = {}
+    for i in range(len(d['text'])):
+        text = d['text'][i].strip()
+        if not text: continue
+        block, line_num = d['block_num'][i], d['line_num'][i]
+        line_key = f"{block}_{line_num}"
+        if line_key not in lines:
+            lines[line_key] = {"words": [], "top": d['top'][i], "bottom": d['top'][i]+d['height'][i], "left": d['left'][i], "right": d['left'][i]+d['width'][i]}
+        lines[line_key]["words"].append(text)
+        lines[line_key]["top"] = min(lines[line_key]["top"], d['top'][i])
+        lines[line_key]["bottom"] = max(lines[line_key]["bottom"], d['top'][i] + d['height'][i])
+        lines[line_key]["left"] = min(lines[line_key]["left"], d['left'][i])
+        lines[line_key]["right"] = max(lines[line_key]["right"], d['left'][i] + d['width'][i])
+
+    view_walls = []
+    for key, line_data in lines.items():
+        full_line_text = " ".join(line_data["words"])
+        if "wall" in full_line_text.lower():
+            cost = parse_wall_cost(full_line_text)
+            if cost is not None:
+                click_x = x1 + ((line_data["left"] + line_data["right"]) // 2) // 2
+                click_y = y1 + ((line_data["top"] + line_data["bottom"]) // 2) // 2
+                view_walls.append({"text": full_line_text, "cost": cost, "click_x": click_x, "click_y": click_y})
+    
+    return view_walls
 
 
 # --- REMOVED MAX_TAPS PARAMETER FOR TRUE UNCHAINED AUTOMATION ---
@@ -80,38 +127,31 @@ def find_and_click_lowest_cost_wall(available_gold, available_elixir, max_scroll
             print(" [Error] Crop failed.")
             return
 
-        gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
-        inverted = cv2.bitwise_not(gray)
-        bigger = cv2.resize(inverted, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
-        
-        d = pytesseract.image_to_data(bigger, config=r'--psm 6', output_type=Output.DICT)
-        
-        lines = {}
-        for i in range(len(d['text'])):
-            text = d['text'][i].strip()
-            if not text: continue
-            block, line_num = d['block_num'][i], d['line_num'][i]
-            line_key = f"{block}_{line_num}"
-            if line_key not in lines:
-                lines[line_key] = {"words": [], "top": d['top'][i], "bottom": d['top'][i]+d['height'][i], "left": d['left'][i], "right": d['left'][i]+d['width'][i]}
-            lines[line_key]["words"].append(text)
-            lines[line_key]["top"] = min(lines[line_key]["top"], d['top'][i])
-            lines[line_key]["bottom"] = max(lines[line_key]["bottom"], d['top'][i] + d['height'][i])
-            lines[line_key]["left"] = min(lines[line_key]["left"], d['left'][i])
-            lines[line_key]["right"] = max(lines[line_key]["right"], d['left'][i] + d['width'][i])
+        # 1. Read the screen using your logic
+        current_view_walls = scan_crop_for_walls(crop, x1, y1)
 
-        current_view_walls = []
-        for key, line_data in lines.items():
-            full_line_text = " ".join(line_data["words"])
-            if "wall" in full_line_text.lower():
-                cost = parse_wall_cost(full_line_text)
-                if cost is not None:
-                    click_x = x1 + ((line_data["left"] + line_data["right"]) // 2) // 2
-                    click_y = y1 + ((line_data["top"] + line_data["bottom"]) // 2) // 2
-                    current_view_walls.append({"text": full_line_text, "cost": cost, "click_x": click_x, "click_y": click_y})
-
+        # 2. If a wall is found, half-swipe and read AGAIN
         if current_view_walls:
-            lowest_wall = min(current_view_walls, key=lambda x: x["cost"])
+            print(" [Found] Wall detected! Performing half-swipe to check for better options...")
+            scroll_half_down_builder_menu(BUILDER_LIST_REGION)
+            time.sleep(0.8)
+            
+            # Get fresh screenshot and crop after the swipe
+            new_screen = get_current_screen()
+            new_crop = new_screen[y1:y2, x1:x2]
+            
+            # Read the new screen using your exact logic
+            final_view_walls = scan_crop_for_walls(new_crop, x1, y1)
+            
+            # Safety fallback in case the swipe messed up the view
+            if not final_view_walls:
+                final_view_walls = current_view_walls
+        else:
+            final_view_walls = []
+
+        # 3. Your original calculation and clicking logic
+        if final_view_walls:
+            lowest_wall = min(final_view_walls, key=lambda x: x["cost"])
             wall_cost = lowest_wall["cost"]
             raw_text = lowest_wall["text"]
             
