@@ -1,0 +1,19 @@
+# CoC Bot - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Image Processing
+opencv-python==4.8.1.78
+numpy==1.24.3
+
+# OCR
+pytesseract==0.3.10
+
+# Android Debug Bridge
+pure-python-adb==0.3.0.post6
+
+# Optional: Web dashboard (future)
+# flask==2.3.3
+# flask-cors==4.0.0
+
+# Optional: Error tracking (future)
+# sentry-sdk==1.32.0

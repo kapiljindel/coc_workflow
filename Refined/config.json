@@ -1,0 +1,42 @@
+{
+    "ADB_PORT": 5555,
+    "MINIMUM_GOLD": 400000,
+    "MINIMUM_ELIXIR": 400000,
+    "TOTAL_TROOPS": 120,
+    "MAX_GOLD": 9250000,
+    "MAX_ELIXIR": 9250000,
+    "IS_UPGRADE_WALL": false,
+    "deploy_strategy": "single_side",
+    "MY_ARMY": [
+        {
+            "name": "dragon",
+            "category": "troop",
+            "count": 20
+        },
+        {
+            "name": "king",
+            "category": "hero",
+            "count": 1
+        },
+        {
+            "name": "queen",
+            "category": "hero",
+            "count": 1
+        },
+        {
+            "name": "warden",
+            "category": "hero",
+            "count": 1
+        },
+        {
+            "name": "freeze",
+            "category": "spell",
+            "count": 5
+        },
+        {
+            "name": "rage",
+            "category": "spell",
+            "count": 2
+        }
+    ]
+}

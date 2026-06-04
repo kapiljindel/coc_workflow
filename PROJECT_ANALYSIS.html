@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoC Bot - Complete Project Analysis & Structure Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            border-bottom: 2px solid #ddd;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .toc h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .toc ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .toc a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .toc a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 50px;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .issue-card {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .issue-card.error {
+            background: #f8d7da;
+            border-left-color: #dc3545;
+        }
+
+        .issue-card.success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+
+        .issue-card.info {
+            background: #d1ecf1;
+            border-left-color: #17a2b8;
+        }
+
+        .issue-card strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #d63384;
+        }
+
+        pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-size: 0.9em;
+        }
+
+        .file-tree {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            border-left: 4px solid #667eea;
+        }
+
+        .file-tree pre {
+            background: transparent;
+            color: #333;
+            padding: 0;
+            margin: 0;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-card h4 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .severity-critical {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .severity-high {
+            color: #fd7e14;
+            font-weight: bold;
+        }
+
+        .severity-medium {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        .severity-low {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .recommendation strong {
+            color: #2196F3;
+        }
+
+        .folder-structure {
+            margin: 20px 0;
+        }
+
+        .folder-item {
+            padding: 8px 12px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 3px;
+            border-left: 3px solid #667eea;
+        }
+
+        .indent-1 {
+            margin-left: 20px;
+        }
+
+        .indent-2 {
+            margin-left: 40px;
+        }
+
+        .indent-3 {
+            margin-left: 60px;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            text-align: center;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin: 2px;
+        }
+
+        .badge-duplicate {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .badge-error {
+            background: #dc3545;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #fd7e14;
+            color: white;
+        }
+
+        .badge-optimize {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .badge-structure {
+            background: #6c757d;
+            color: white;
+        }
+
+        .expansion {
+            margin: 20px 0;
+        }
+
+        .expansion-header {
+            background: #e7f3ff;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 600;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .expansion-header:hover {
+            background: #cce5ff;
+        }
+
+        .expansion-content {
+            display: none;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 0 0 5px 5px;
+            border-left: 3px solid #2196F3;
+            margin-top: 5px;
+        }
+
+        .expansion.active .expansion-content {
+            display: block;
+        }
+
+        .arrow {
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .expansion.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        .action-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .action-list ol {
+            margin-left: 20px;
+        }
+
+        .action-list li {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .action-list li:last-child {
+            border-bottom: none;
+        }
+
+        .priority-1 {
+            border-left: 4px solid #dc3545;
+        }
+
+        .priority-2 {
+            border-left: 4px solid #fd7e14;
+        }
+
+        .priority-3 {
+            border-left: 4px solid #ffc107;
+        }
+
+        .priority-4 {
+            border-left: 4px solid #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🤖 CoC Bot - Complete Project Analysis</h1>
+            <p>Comprehensive Structure Review, Code Issues, Optimization & Refactoring Guide</p>
+        </header>
+
+        <div class="toc">
+            <h2>📑 Table of Contents</h2>
+            <ul>
+                <li><a href="#executive-summary">Executive Summary</a></li>
+                <li><a href="#project-overview">Project Overview</a></li>
+                <li><a href="#current-structure">Current Structure</a></li>
+                <li><a href="#critical-issues">Critical Issues</a></li>
+                <li><a href="#duplicates">Duplicate Files & Code</a></li>
+                <li><a href="#code-issues">Code Quality Issues</a></li>
+                <li><a href="#naming-conventions">Naming Conventions</a></li>
+                <li><a href="#optimization">Optimization Opportunities</a></li>
+                <li><a href="#proposed-structure">Proposed New Structure</a></li>
+                <li><a href="#action-plan">Action Plan</a></li>
+            </ul>
+        </div>
+
+        <div class="content">
+            <!-- EXECUTIVE SUMMARY -->
+            <div class="section" id="executive-summary">
+                <h2>📊 Executive Summary</h2>
+
+                <div class="stats">
+                    <div class="stat-card">
+                        <h4>Total Python Files</h4>
+                        <div class="number">30+</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Duplicate Files</h4>
+                        <div class="number">9</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Critical Issues</h4>
+                        <div class="number">12</div>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Code Duplicates</h4>
+                        <div class="number">3</div>
+                    </div>
+                </div>
+
+                <div class="issue-card">
+                    <strong>⚠️ Overall Assessment: GOOD with Refactoring Needed</strong>
+                    The project is a working Clash of Clans automation bot with solid core functionality. However, it
+                    suffers from poor organization, duplicate code, unused imports, and scattered utility functions
+                    across multiple files. The codebase needs structural reorganization, proper error handling, and
+                    cleanup.
+                </div>
+
+                <h3>Key Findings:</h3>
+                <ul style="margin-left: 20px; margin-top: 15px;">
+                    <li><span class="badge badge-duplicate">Duplicate Files</span> - Multiple versions of the same files
+                        in root and worker folders</li>
+                    <li><span class="badge badge-error">Duplicate Functions</span> - Functions defined twice in
+                        config.py and cg_storage_checker.py</li>
+                    <li><span class="badge badge-warning">Dead Code</span> - Commented-out code blocks throughout
+                        project</li>
+                    <li><span class="badge badge-optimize">Poor Organization</span> - Utility functions scattered, no
+                        proper module structure</li>
+                    <li><span class="badge badge-structure">Config Bloat</span> - config.py is 400+ lines with mixed
+                        concerns</li>
+                </ul>
+            </div>
+
+            <!-- PROJECT OVERVIEW -->
+            <div class="section" id="project-overview">
+                <h2>🎯 Project Overview</h2>
+
+                <h3>Project Type:</h3>
+                <p><strong>Clash of Clans Automation Bot</strong> - A Python-based automation tool that scouts bases,
+                    evaluates loot, and executes attacks using ADB (Android Debug Bridge) and image recognition (OpenCV
+                    + Tesseract OCR).</p>
+
+                <h3>Core Execution Flow:</h3>
+                <pre>
+main.py (Entry Point)
+  ↓
+start.py (Navigate to attack)
+  ↓
+loot_checker.py (Evaluate base loot)
+  ↓
+attack.py → tactics.py (Execute troop deployment)
+  ↓
+attack_end.py (Return home & collect loot)
+  ↓
+cg_storage_checker.py (Check home storage)
+  ↓
+[Loop with 5-minute watchdog safety]
+                </pre>
+
+                <h3>Technology Stack:</h3>
+                <ul style="margin-left: 20px;">
+                    <li><strong>Python 3.x</strong></li>
+                    <li><strong>OpenCV</strong> - Image processing and template matching</li>
+                    <li><strong>Tesseract OCR</strong> - Text recognition for loot values</li>
+                    <li><strong>ppadb</strong> - Android Debug Bridge connection</li>
+                    <li><strong>NumPy</strong> - Image array processing</li>
+                </ul>
+            </div>
+
+            <!-- CURRENT STRUCTURE -->
+            <div class="section" id="current-structure">
+                <h2>📁 Current Project Structure</h2>
+
+                <h3>Root Level Files (30+ files):</h3>
+                <div class="file-tree">
+                    <pre>
+coc_bot/
+├── 📄 Core Execution Files
+│   ├── main.py                 ⚠️ Watchdog + orchestration
+│   ├── start.py                ⚠️ Navigate to base (has commented code)
+│   ├── loot_checker.py         ✓ Evaluate loot
+│   ├── attack.py               ✓ Deploy troops orchestration
+│   ├── attack_end.py           ✓ Return home
+│   ├── recovery.py             ✓ Watchdog recovery
+│
+├── 📄 Combat & Tactics
+│   ├── tactics.py              ✓ Troop deployment strategy
+│   ├── deploy_swarm.py         ⚠️ Complex deployment logic (400+ lines)
+│   ├── select_troop.py         ✓ Troop selection
+│   ├── base_scanner.py         ✓ Tactical point generation
+│   ├── troop_calculator.py     ✓ Break troops into bunches
+│
+├── 📄 Utility & Configuration
+│   ├── config.py               ❌ BLOATED (400+ lines, duplicate functions!)
+│   ├── config.json             ✓ Configuration file
+│   ├── main_config.py          ? Unknown purpose
+│   ├── cg_storage_checker.py   ❌ Duplicate function definitions
+│   ├── upgrade.py              ⚠️ Wall upgrading (incomplete)
+│   ├── army_builder.py         ⚠️ Interactive setup utility
+│
+├── 📄 Logging & Data
+│   ├── push_data.py            ? Purpose unclear
+│   ├── error.py                ? Purpose unclear
+│   ├── ui.py                   ? Purpose unclear
+│   ├── auto.py                 ? Purpose unclear
+│   ├── new.py                  ❌ Likely test/temp file
+│   ├── storage_check1.py       ⚠️ Old version
+│   ├── base_scanner copy.py    ❌ Duplicate copy
+│   ├── deploy_swarm copy.py    ❌ Duplicate copy
+│   ├── deploy_swarm copy 2.py  ❌ Duplicate copy
+│   ├── tactics-old.py          ❌ Old version
+│
+├── 📁 worker/                  ⚠️ Contains duplicate versions of core files
+│   ├── main.py                 (Old version)
+│   ├── start.py                (Older version)
+│   ├── attack.py
+│   ├── attack_end.py
+│   ├── base_scanner.py
+│   ├── config.py
+│   ├── deploy_swarm.py
+│   ├── loot_checker.py
+│   ├── select_troop.py
+│   ├── tactics.py
+│   ├── troop_calculator.py
+│   ├── cg_storage_checker.py
+│
+├── 📁 version/                 ⚠️ Version history (v1-v5)
+│   ├── v1/, v2/, v3/, v4/, v5/
+│
+├── 📁 logs/                    ✓ Log files by date
+│   ├── 2026-05-13_attack.txt
+│   ├── 2026-05-13_errors.txt
+│   └── ... (100+ log files)
+│
+├── 📁 assets/                  ✓ Game screenshot templates
+│   └── dragon.png1
+│
+├── 📁 img/                     ✓ Debug output folder
+│   └── tactical_map.png, ui_boxes.png, etc.
+│
+├── 📁 platform-tools/          ✓ Tesseract OCR
+│   └── Tesseract-OCR/
+│
+├── 📄 Documentation
+│   ├── README.md               ✓ Project documentation
+│   └── Working.md              ✓ File descriptions
+                    </pre>
+                </div>
+
+                <div class="issue-card error">
+                    <strong>❌ Structure Problems Identified:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>9 duplicate files that should be removed or consolidated</li>
+                        <li>Old version history cluttering the workspace</li>
+                        <li>Worker folder contains outdated versions of core files</li>
+                        <li>No clear separation between core, utils, and test modules</li>
+                        <li>Multiple temporary/test files mixed with production code</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CRITICAL ISSUES -->
+            <div class="section" id="critical-issues">
+                <h2>🚨 Critical Issues Found</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Issue #</th>
+                            <th>Severity</th>
+                            <th>File</th>
+                            <th>Problem</th>
+                            <th>Impact</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><span class="severity-critical">CRITICAL</span></td>
+                            <td>cg_storage_checker.py</td>
+                            <td>Function <code>check_home_loot()</code> defined TWICE (lines ~20 and ~50)</td>
+                            <td>Second definition overwrites first, causing unexpected behavior</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><span class="severity-critical">CRITICAL</span></td>
+                            <td>config.py</td>
+                            <td>Function <code>save_debug_screenshot()</code> defined TWICE (lines ~280 and ~340)</td>
+                            <td>Duplicate code, confusion about which version executes</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><span class="severity-high">HIGH</span></td>
+                            <td>start.py</td>
+                            <td>Contains entire old commented function (lines ~20-35) taking up space</td>
+                            <td>Dead code makes file hard to read and maintain</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><span class="severity-high">HIGH</span></td>
+                            <td>deploy_swarm.py</td>
+                            <td>File is 250+ lines with complex nested logic, hard to test</td>
+                            <td>Difficult to debug and maintain; potential crash points</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td><span class="severity-high">HIGH</span></td>
+                            <td>config.py</td>
+                            <td>400+ lines with mixed concerns (ADB, OCR, logging, image processing)</td>
+                            <td>Violates Single Responsibility Principle; hard to maintain</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td><span class="severity-high">HIGH</span></td>
+                            <td>worker/ folder</td>
+                            <td>Contains 12 outdated duplicate files</td>
+                            <td>Confusion about which files are active; wasted storage</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td><span class="severity-medium">MEDIUM</span></td>
+                            <td>Multiple files</td>
+                            <td>Unused imports: <code>requests</code>, <code>json</code> in several files</td>
+                            <td>Memory overhead; confuses developers</td>
+                        </tr>
+                        <tr>
+                            <td>8</td>
+                            <td><span class="severity-medium">MEDIUM</span></td>
+                            <td>config.json</td>
+                            <td>Troop name "sieze machine" misspelled (should be "seize")</td>
+                            <td>May cause template matching failures</td>
+                        </tr>
+                        <tr>
+                            <td>9</td>
+                            <td><span class="severity-medium">MEDIUM</span></td>
+                            <td>config.json</td>
+                            <td>Troop name "id1" is not descriptive</td>
+                            <td>Confusing for maintenance; unclear what unit this represents</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td><span class="severity-medium">MEDIUM</span></td>
+                            <td>Multiple files</td>
+                            <td>No error handling in image template matching (find_and_click)</td>
+                            <td>Silent failures; hard to debug crashes</td>
+                        </tr>
+                        <tr>
+                            <td>11</td>
+                            <td><span class="severity-medium">MEDIUM</span></td>
+                            <td>deploy_swarm.py, attack.py</td>
+                            <td>Magic numbers (hardcoded delays, coordinates, thresholds)</td>
+                            <td>Hard to tune; scattered constants across files</td>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td><span class="severity-low">LOW</span></td>
+                            <td>Various</td>
+                            <td>No logging levels (all debug info treated equally)</td>
+                            <td>Difficult to filter important info in log files</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- DUPLICATES -->
+            <div class="section" id="duplicates">
+                <h2>🔄 Duplicate Files & Code</h2>
+
+                <h3>Duplicate Files to Remove:</h3>
+                <div class="issue-card error">
+                    <strong>These files are OBSOLETE and should be deleted:</strong>
+                    <div style="margin-top: 10px;">
+                        <p><code>deploy_swarm copy.py</code> → Use main <code>deploy_swarm.py</code></p>
+                        <p><code>deploy_swarm copy 2.py</code> → Use main <code>deploy_swarm.py</code></p>
+                        <p><code>base_scanner copy.py</code> → Use main <code>base_scanner.py</code></p>
+                        <p><code>tactics-old.py</code> → Use main <code>tactics.py</code></p>
+                        <p><code>storage_check1.py</code> → Use main <code>cg_storage_checker.py</code></p>
+                        <p><code>new.py</code> → Test/temp file, no purpose</p>
+                        <p><code>error.py</code> → No implementation found</p>
+                        <p><code>ui.py</code> → No implementation found</p>
+                        <p><code>auto.py</code> → No implementation found</p>
+                    </div>
+                </div>
+
+                <h3>Entire Folders to Review/Remove:</h3>
+                <div class="issue-card warning">
+                    <strong><code>worker/</code> folder</strong> - Contains 12 duplicate versions of core files
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>All files are older versions or duplicates</li>
+                        <li>The main.py in worker/ lacks watchdog timer and error handling</li>
+                        <li>Either archive this or delete entirely</li>
+                    </ul>
+                </div>
+
+                <div class="issue-card warning">
+                    <strong><code>version/</code> folder (v1-v5)</strong> - Historical versions
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Consider moving to Git history or archive if not needed</li>
+                        <li>Clutters the project with old code</li>
+                    </ul>
+                </div>
+
+                <h3>Duplicate Code Within Single Files:</h3>
+
+                <div class="expansion">
+                    <div class="expansion-header" onclick="this.parentElement.classList.toggle('active')">
+                        <span class="arrow">▶</span>
+                        <span>Issue #1: <code>cg_storage_checker.py</code> - Duplicate
+                            <code>check_home_loot()</code></span>
+                    </div>
+                    <div class="expansion-content">
+                        <p><strong>Problem:</strong> The function is defined twice!</p>
+                        <pre>
+# First definition at ~line 20
+def check_home_loot():
+    print("\n [Storage] Checking Home Village Vaults...")
+    # ... code ...
+
+# Second definition at ~line 50 (OVERWRITES THE FIRST!)
+def check_home_loot():
+    """Send Telegram alert and handle conditional wall upgrading if storage is high."""
+    print("\n [Storage] Checking Home Village Vaults...")
+                        </pre>
+                        <p><strong>Impact:</strong> Only the second definition executes. The first one's logic is lost.
+                        </p>
+                        <p><strong>Fix:</strong> Merge both functions or rename one. Keep the version with better
+                            implementation.</p>
+                    </div>
+                </div>
+
+                <div class="expansion">
+                    <div class="expansion-header" onclick="this.parentElement.classList.toggle('active')">
+                        <span class="arrow">▶</span>
+                        <span>Issue #2: <code>config.py</code> - Duplicate <code>save_debug_screenshot()</code></span>
+                    </div>
+                    <div class="expansion-content">
+                        <p><strong>Problem:</strong> Function defined at ~line 280 AND again at ~line 340!</p>
+                        <pre>
+# First definition (~line 280) - Shorter version
+def save_debug_screenshot():
+    if not DEBUG_MODE: return
+    screen = get_current_screen()
+    # Draws boxes and saves
+
+# Second definition (~line 340) - Adds BUILDER_LIST
+def save_debug_screenshot():
+    if not DEBUG_MODE: return
+    screen = get_current_screen()
+    # Draws boxes PLUS builder list
+    # Saves to 'img/ui_boxes.png'
+                        </pre>
+                        <p><strong>Impact:</strong> Second definition overwrites first. Builder list box always drawn
+                            (or never, depending on which version wins).</p>
+                        <p><strong>Fix:</strong> Delete first version, keep second. Or merge conditional logic.</p>
+                    </div>
+                </div>
+
+                <div class="expansion">
+                    <div class="expansion-header" onclick="this.parentElement.classList.toggle('active')">
+                        <span class="arrow">▶</span>
+                        <span>Issue #3: <code>start.py</code> - Entire Commented Function Block</span>
+                    </div>
+                    <div class="expansion-content">
+                        <p><strong>Problem:</strong> Lines 25-48 contain the entire OLD function commented out:</p>
+                        <pre>
+# [Lines 1-23: New function]
+def go_to_base():
+    print("\n [Start] Opening Map...")
+    attempts = 0
+    while not (find_and_click("main_attack.png") or find_and_click("main_attack_low.png") or find_and_click("main_attack_4.png")):
+        # ...code...
+    return True
+
+    # [Lines 25-48: ENTIRE OLD FUNCTION COMMENTED OUT!]
+    # import time
+    # import random  # --- NEW: Import random module
+    # from config import find_and_click
+    # 
+    # def go_to_base():
+    #     print("\n [Start] Opening Map...")
+    #     # Keep trying until it successfully clicks the attack button
+    #     # ... 20+ lines of commented code ...
+                        </pre>
+                        <p><strong>Impact:</strong> Wastes space; confuses developers; clutters the file.</p>
+                        <p><strong>Fix:</strong> DELETE lines 25-48 entirely. If history needed, use Git.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CODE ISSUES -->
+            <div class="section" id="code-issues">
+                <h2>⚠️ Code Quality Issues</h2>
+
+                <h3>1. Bloated Configuration File</h3>
+                <div class="issue-card error">
+                    <strong>File: <code>config.py</code> (400+ lines)</strong>
+                    <p style="margin-top: 10px;">This file mixes multiple concerns:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>✗ ADB device connection (lines 60-70)</li>
+                        <li>✗ Logging setup (lines 75-100)</li>
+                        <li>✗ Vision/image processing tools (lines 110-200)</li>
+                        <li>✗ OCR number extraction (lines 210-250)</li>
+                        <li>✗ Debug screenshot generation (lines 280+ - defined TWICE!)</li>
+                        <li>✗ Builder menu utilities (lines 350+)</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>Why This Is Bad:</strong> Violates Single Responsibility
+                        Principle. Hard to test, maintain, and understand.</p>
+                    <p><strong>Solution:</strong> Break into modules:</p>
+                    <ul style="margin-left: 20px;">
+                        <li><code>adb_connector.py</code> - Device connection</li>
+                        <li><code>logger.py</code> - Logging functionality</li>
+                        <li><code>vision.py</code> - Image matching & OCR</li>
+                        <li><code>constants.py</code> - Config values only</li>
+                    </ul>
+                </div>
+
+                <h3>2. No Error Handling in Critical Functions</h3>
+                <div class="issue-card warning">
+                    <strong>Problem in: <code>config.py</code> - <code>find_and_click()</code></strong>
+                    <pre>
+def find_and_click(image_name, threshold=0.8, click=True):
+    screen = get_current_screen()
+    
+    template_path = os.path.join(ASSETS_PATH, image_name)
+    template = cv2.imread(template_path)
+    if template is None: return False  # ❌ SILENT FAIL
+    
+    # No try-except blocks!
+    result = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
+    _, max_val, _, max_loc = cv2.minMaxLoc(result)
+    # ...
+                    </pre>
+                    <p><strong>Why It's Bad:</strong> If screen capture fails or image matching errors, code silently
+                        fails. Watchdog triggers, bot restarts.</p>
+                    <p><strong>Fix:</strong> Add proper error handling with logging:</p>
+                    <pre>
+def find_and_click(image_name, threshold=0.8, click=True):
+    try:
+        screen = get_current_screen()
+        if screen is None:
+            add_log("errors", f"Failed to capture screen")
+            return False
+        
+        template_path = os.path.join(ASSETS_PATH, image_name)
+        template = cv2.imread(template_path)
+        if template is None:
+            add_log("errors", f"Template '{image_name}' not found")
+            return False
+        
+        result = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
+        # ...
+    except Exception as e:
+        add_log("errors", f"find_and_click failed: {e}")
+        return False
+                    </pre>
+                </div>
+
+                <h3>3. Magic Numbers Scattered Throughout Code</h3>
+                <div class="issue-card warning">
+                    <strong>Issues Found:</strong>
+                    <table style="margin-top: 10px; width: 100%;">
+                        <tr>
+                            <td style="width: 40%;"><code>deploy_swarm.py</code></td>
+                            <td>Hardcoded: <code>hold_time = chunk * 40</code> (line 130) - What does 40 mean?</td>
+                        </tr>
+                        <tr>
+                            <td><code>attack.py</code></td>
+                            <td>Hardcoded: <code>max_attack_duration = random.randint(90, 120)</code> - Why these
+                                values?</td>
+                        </tr>
+                        <tr>
+                            <td><code>loot_checker.py</code></td>
+                            <td>Hardcoded: <code>time.sleep(random.uniform(1.8, 3.5))</code> - Human reaction time?</td>
+                        </tr>
+                        <tr>
+                            <td><code>base_scanner.py</code></td>
+                            <td>Hardcoded: <code>num_points=12</code> in line generation - Why 12?</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 10px;"><strong>Fix:</strong> Move to constants file with meaningful names:</p>
+                    <pre>
+# constants.py
+HOLD_TIME_PER_TROOP = 40  # milliseconds
+ATTACK_DURATION_MIN = 90  # seconds
+ATTACK_DURATION_MAX = 120  # seconds
+HUMAN_REACTION_TIME_MIN = 1.8  # seconds
+HUMAN_REACTION_TIME_MAX = 3.5  # seconds
+TACTICAL_POINTS_PER_SIDE = 12  # deployment points
+                    </pre>
+                </div>
+
+                <h3>4. Unused Imports</h3>
+                <div class="issue-card info">
+                    <strong>Found in multiple files:</strong>
+                    <ul style="margin-left: 20px;">
+                        <li><code>cg_storage_checker.py</code> - imports <code>requests</code> but never uses it</li>
+                        <li><code>config.py</code> - imports <code>json</code> multiple times,
+                            <code>pytesseract.Output</code> in upgrade.py</li>
+                        <li><code>deploy_swarm.py</code> - imports <code>json</code> (only used in try-except)</li>
+                    </ul>
+                    <p style="margin-top: 10px;"><strong>Impact:</strong> Memory overhead, confusion for developers</p>
+                    <p><strong>Fix:</strong> Remove all unused imports. Use linters like <code>pylint</code> to catch
+                        these.</p>
+                </div>
+
+                <h3>5. Poor Exception Handling</h3>
+                <div class="issue-card warning">
+                    <strong>Example from <code>cg_storage_checker.py</code>:</strong>
+                    <pre>
+def send_telegram_message(message):
+    """Send Telegram alert."""
+    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    data = {
+        "chat_id": CHAT_ID,
+        "text": message
+    }
+    try:
+        requests.post(url, data=data, timeout=10)
+    except Exception as e:
+        print(f"Telegram Error: {e}")  # ❌ Just prints, doesn't log or retry
+                    </pre>
+                    <p style="margin-top: 10px;"><strong>Issues:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li>Bare <code>except Exception</code> catches too much</li>
+                        <li>No retry logic for transient failures</li>
+                        <li>Error not logged to file</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- NAMING CONVENTIONS -->
+            <div class="section" id="naming-conventions">
+                <h2>🏷️ Naming Convention Issues</h2>
+
+                <div class="issue-card warning">
+                    <strong>1. Misspelled Troop Names in config.json</strong>
+                    <pre>
+"MY_ARMY": [
+    {"name": "id1", ...},              ❌ Not descriptive
+    {"name": "sieze machine", ...},    ❌ Misspelled: should be "seize"
+    {"name": "king", ...},
+    {"name": "queen", ...},
+    {"name": "warden", ...},
+    {"name": "freeze", ...},
+]
+                    </pre>
+                    <p><strong>Fix:</strong></p>
+                    <pre>
+"MY_ARMY": [
+    {"name": "barbarian", ...},  // or appropriate unit name
+    {"name": "siege_machine", ...},
+    {"name": "king", ...},
+    // ...
+]
+                    </pre>
+                </div>
+
+                <div class="issue-card warning">
+                    <strong>2. Inconsistent Function Naming</strong>
+                    <table style="margin-top: 10px; width: 100%;">
+                        <tr>
+                            <th>File</th>
+                            <th>Issue</th>
+                        </tr>
+                        <tr>
+                            <td><code>config.py</code></td>
+                            <td>Mix of styles: <code>find_and_click()</code>, <code>read_troops()</code>,
+                                <code>_extract_number()</code> (underscore not consistent)</td>
+                        </tr>
+                        <tr>
+                            <td><code>upgrade.py</code></td>
+                            <td><code>parse_wall_quantity()</code> vs <code>parse_wall_cost()</code> - good! But
+                                <code>scroll_half_down_builder_menu()</code> is long</td>
+                        </tr>
+                        <tr>
+                            <td><code>tactics.py</code></td>
+                            <td><code>execute_full_army_attack()</code> - clear and descriptive ✓</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="issue-card warning">
+                    <strong>3. Unclear Variable Names</strong>
+                    <ul style="margin-left: 20px;">
+                        <li><code>deploy_swarm.py</code>, line 45:
+                            <code>step = max(1, len(safe_points) / max(1, len(bunches)))</code> - What does 'step'
+                            represent?</li>
+                        <li><code>config.py</code>, line 350: <code>BUILDER_LIST_REGION</code> - Not documented</li>
+                        <li><code>base_scanner.py</code>, line 10: <code>LINE_TL_START, LINE_TL_END</code> - OK, but
+                            could be <code>TOP_LEFT_LINE_START</code> for clarity</li>
+                    </ul>
+                </div>
+
+                <div class="issue-card success">
+                    <strong>✓ Good Naming Examples:</strong>
+                    <ul style="margin-left: 20px;">
+                        <li><code>go_to_base()</code> - Clear intent</li>
+                        <li><code>evaluate_base()</code> - Self-explanatory</li>
+                        <li><code>calculate_bunches()</code> - Clear purpose</li>
+                        <li><code>get_safe_spam_points()</code> - Descriptive</li>
+                        <li><code>rescue_bot()</code> - Clear recovery action</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- OPTIMIZATION -->
+            <div class="section" id="optimization">
+                <h2>⚡ Optimization Opportunities</h2>
+
+                <h3>1. Break Down Complex Functions</h3>
+                <div class="recommendation">
+                    <strong>🎯 deploy_swarm.py is 250+ lines</strong>
+                    <p>This function does too much:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Read configuration from JSON</li>
+                        <li>Generate deployment points based on strategy</li>
+                        <li>Calculate spell targeting (penetration + offset)</li>
+                        <li>Create debug visualization</li>
+                        <li>Execute deployment via ADB</li>
+                        <li>Verify deployment</li>
+                    </ul>
+                    <p><strong>Solution:</strong> Break into smaller functions:</p>
+                    <pre>
+def _read_deployment_strategy() -> str
+def _get_deployment_points(all_side_points, strategy) -> list
+def _calculate_spell_coordinates(base_pt, center, category) -> tuple
+def _draw_tactical_debug_map(...)
+def _execute_deployment_commands(...)
+def _verify_deployment(...)
+
+# Main function orchestrates
+def deploy_swarm(troop_name, category, bunches, all_side_points, panic_points, chosen_side_name):
+    strategy = _read_deployment_strategy()
+    safe_points = _get_deployment_points(all_side_points, strategy)
+    # ...
+                    </pre>
+                </div>
+
+                <h3>2. Cache Template Images</h3>
+                <div class="recommendation">
+                    <strong>🎯 Image templates are loaded every call</strong>
+                    <p>Current: <code>find_and_click()</code> calls <code>cv2.imread()</code> every time</p>
+                    <pre>
+# CURRENT (Inefficient)
+def find_and_click(image_name, threshold=0.8, click=True):
+    screen = get_current_screen()
+    template_path = os.path.join(ASSETS_PATH, image_name)
+    template = cv2.imread(template_path)  # ❌ Loaded EVERY call!
+                    </pre>
+                    <p><strong>Solution:</strong> Cache templates on startup</p>
+                    <pre>
+# OPTIMIZED
+_TEMPLATE_CACHE = {}
+
+def _load_template(image_name):
+    if image_name not in _TEMPLATE_CACHE:
+        path = os.path.join(ASSETS_PATH, image_name)
+        _TEMPLATE_CACHE[image_name] = cv2.imread(path)
+    return _TEMPLATE_CACHE[image_name]
+
+def find_and_click(image_name, threshold=0.8, click=True):
+    screen = get_current_screen()
+    template = _load_template(image_name)  # ✓ Cached!
+                    </pre>
+                </div>
+
+                <h3>3. Consolidate Logging</h3>
+                <div class="recommendation">
+                    <strong>🎯 Logging is scattered and lacks levels</strong>
+                    <p>Current approach:</p>
+                    <ul style="margin-left: 20px;">
+                        <li>Manual categories: "resources", "attack", "errors", "buttons"</li>
+                        <li>No log levels (INFO, WARNING, ERROR, DEBUG)</li>
+                        <li>Files flushed after every cycle</li>
+                    </ul>
+                    <p><strong>Solution:</strong> Use Python's built-in <code>logging</code> module</p>
+                    <pre>
+import logging
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('logs/bot.log'),
+        logging.StreamHandler()
+    ]
+)
+
+logger = logging.getLogger(__name__)
+
+# Usage:
+logger.info("Attack started")
+logger.warning("Template not found")
+logger.error("ADB connection failed")
+logger.debug("Detailed debug info")
+                    </pre>
+                </div>
+
+                <h3>4. Reduce Sleep Times (Non-Blocking Waits)</h3>
+                <div class="recommendation">
+                    <strong>🎯 Code uses blocking sleep() extensively</strong>
+                    <p>Example bottlenecks:</p>
+                    <ul style="margin-left: 20px;">
+                        <li><code>recovery.py</code>: <code>time.sleep(20)</code> after app launch</li>
+                        <li><code>main.py</code>: <code>time.sleep(3)</code> to read logs</li>
+                        <li><code>attack_end.py</code>: <code>time.sleep(3.5-5.5)</code> for home load</li>
+                    </ul>
+                    <p><strong>Solution:</strong> Use polling with shorter intervals</p>
+                    <pre>
+# CURRENT (Wasteful)
+time.sleep(20)
+
+# OPTIMIZED (Poll for game ready)
+def wait_for_game_ready(timeout=20, check_interval=1):
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            screen = device.screencap()
+            if screen is not None and len(screen) > 0:
+                return True
+        except:
+            pass
+        time.sleep(check_interval)
+    return False
+                    </pre>
+                </div>
+
+                <h3>5. Parallel Image Matching</h3>
+                <div class="recommendation">
+                    <strong>🎯 Sequential template matching is slow</strong>
+                    <p>When checking for multiple buttons, current code tries one at a time:</p>
+                    <pre>
+if find_and_click("surrender.png") or find_and_click("end_battle.png"):
+    # Both calls execute sequentially
+                    </pre>
+                    <p><strong>Solution:</strong> Match all templates in one shot</p>
+                    <pre>
+def find_multiple_templates(template_names, screen=None):
+    if screen is None:
+        screen = get_current_screen()
+    
+    best_match = None
+    best_score = 0
+    
+    for name in template_names:
+        template = _load_template(name)
+        if template is None:
+            continue
+        result = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
+        _, max_val, _, max_loc = cv2.minMaxLoc(result)
+        
+        if max_val > best_score:
+            best_match = (name, max_loc)
+            best_score = max_val
+    
+    return best_match if best_score >= THRESHOLD else None
+                    </pre>
+                </div>
+            </div>
+
+            <!-- PROPOSED STRUCTURE -->
+            <div class="section" id="proposed-structure">
+                <h2>🏗️ Proposed New Project Structure</h2>
+
+                <p>Here's the recommended reorganization:</p>
+
+                <div class="file-tree">
+                    <pre>
+coc_bot/
+│
+├── 📁 core/                    # Main bot logic
+│   ├── __init__.py
+│   ├── main.py                 # Entry point (move from root)
+│   ├── orchestrator.py         # Main loop & watchdog (extract from main.py)
+│   └── recovery.py             # Crash recovery
+│
+├── 📁 game_actions/            # Individual game actions
+│   ├── __init__.py
+│   ├── navigation.py           # start.py → renamed
+│   ├── scouting.py             # loot_checker.py → renamed
+│   ├── combat.py               # attack.py → renamed
+│   ├── cleanup.py              # attack_end.py → renamed
+│   └── storage.py              # cg_storage_checker.py → renamed
+│
+├── 📁 tactics/                 # Combat strategy
+│   ├── __init__.py
+│   ├── deployment.py           # deploy_swarm.py → refactored
+│   ├── strategy.py             # tactics.py → renamed
+│   ├── troop_selection.py      # select_troop.py → renamed
+│   ├── troop_planning.py       # troop_calculator.py → renamed
+│   └── base_analysis.py        # base_scanner.py → renamed
+│
+├── 📁 utils/                   # Utility & helper modules
+│   ├── __init__.py
+│   ├── adb_connector.py        # ADB device connection (extract from config.py)
+│   ├── vision.py               # Image matching & OCR (extract from config.py)
+│   ├── logger.py               # Logging setup (extract from config.py)
+│   ├── constants.py            # Configuration values & magic numbers
+│   └── helpers.py              # General utilities
+│
+├── 📁 config/                  # Configuration & constants
+│   ├── __init__.py
+│   ├── settings.py             # Load config.json
+│   ├── coordinates.py          # Screen regions & coordinates
+│   └── thresholds.py           # Detection thresholds & timeouts
+│
+├── 📁 upgrades/                # Optional: Building upgrades
+│   ├── __init__.py
+│   └── wall_upgrade.py         # upgrade.py → renamed & organized
+│
+├── 📁 admin/                   # Optional: Admin/Setup tools
+│   ├── __init__.py
+│   ├── army_setup.py           # army_builder.py → renamed
+│   └── calibration.py          # Coordinate calibration tools
+│
+├── 📁 assets/                  # Game screenshot templates
+│   ├── main_attack.png
+│   ├── find_match.png
+│   └── ... (all UI templates)
+│
+├── 📁 logs/                    # Log files (auto-generated)
+│   └── bot.log
+│
+├── 📁 img/                     # Debug output (auto-generated)
+│   └── (debug screenshots)
+│
+├── 📁 platform-tools/          # Tesseract OCR (keep as-is)
+│   └── Tesseract-OCR/
+│
+├── 📄 config.json              # Configuration (validated structure)
+├── 📄 requirements.txt          # Python dependencies (NEW)
+├── 📄 README.md                # Updated documentation
+├── 📄 SETUP.md                 # Setup & installation guide (NEW)
+├── 📄 ARCHITECTURE.md          # Architecture documentation (NEW)
+│
+└── ❌ DELETE THESE:
+    ├── deploy_swarm copy.py
+    ├── deploy_swarm copy 2.py
+    ├── base_scanner copy.py
+    ├── tactics-old.py
+    ├── storage_check1.py
+    ├── new.py
+    ├── error.py
+    ├── ui.py
+    ├── auto.py
+    ├── main_config.py (check if used first)
+    ├── push_data.py (check if used first)
+    ├── worker/ (entire folder)
+    └── version/ (move to Git history or archive)
+                    </pre>
+                </div>
+
+                <h3>Module Descriptions:</h3>
+                <table style="margin-top: 20px;">
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>Responsibility</th>
+                            <th>Key Functions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>core/main.py</code></td>
+                            <td>Entry point & orchestration</td>
+                            <td><code>main()</code>, <code>run_bot()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>core/orchestrator.py</code></td>
+                            <td>Main loop, watchdog, flow control</td>
+                            <td><code>run_attack_cycle()</code>, <code>watchdog_monitor()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>game_actions/navigation.py</code></td>
+                            <td>Navigate to bases</td>
+                            <td><code>go_to_base()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>game_actions/scouting.py</code></td>
+                            <td>Evaluate loot, decide to attack</td>
+                            <td><code>evaluate_base()</code>, <code>read_loot()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>game_actions/combat.py</code></td>
+                            <td>Execute attacks</td>
+                            <td><code>deploy_troops()</code>, <code>monitor_battle()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>tactics/deployment.py</code></td>
+                            <td>Deploy individual troops/spells</td>
+                            <td><code>deploy_swarm()</code>, helpers</td>
+                        </tr>
+                        <tr>
+                            <td><code>tactics/strategy.py</code></td>
+                            <td>Battle tactics & troop order</td>
+                            <td><code>execute_full_army_attack()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>utils/vision.py</code></td>
+                            <td>Image matching, OCR, screenshots</td>
+                            <td><code>find_and_click()</code>, <code>read_loot()</code>, <code>read_damage()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>utils/adb_connector.py</code></td>
+                            <td>Device connection & ADB commands</td>
+                            <td><code>get_device()</code>, <code>execute_adb_command()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>utils/logger.py</code></td>
+                            <td>Structured logging</td>
+                            <td><code>setup_logging()</code>, <code>get_logger()</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>config/settings.py</code></td>
+                            <td>Load & validate config.json</td>
+                            <td><code>load_config()</code>, <code>validate_config()</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ACTION PLAN -->
+            <div class="section" id="action-plan">
+                <h2>✅ Step-by-Step Action Plan</h2>
+
+                <div class="action-list">
+                    <h3>Phase 1: Cleanup & Preparation (1-2 hours)</h3>
+                    <ol>
+                        <li class="priority-1">
+                            <strong>Delete Duplicate Files</strong>
+                            <ul>
+                                <li>Remove: <code>deploy_swarm copy.py</code>, <code>deploy_swarm copy 2.py</code></li>
+                                <li>Remove: <code>base_scanner copy.py</code></li>
+                                <li>Remove: <code>tactics-old.py</code>, <code>storage_check1.py</code></li>
+                                <li>Remove: <code>new.py</code>, <code>error.py</code>, <code>ui.py</code>,
+                                    <code>auto.py</code></li>
+                                <li>Backup & delete: <code>worker/</code> folder</li>
+                                <li>Backup & delete: <code>version/</code> folder (move to Git history)</li>
+                            </ul>
+                        </li>
+                        <li class="priority-1">
+                            <strong>Remove Commented Code</strong>
+                            <ul>
+                                <li>In <code>start.py</code>: Delete lines 25-48 (commented old function)</li>
+                                <li>Search all files for other commented-out blocks and remove</li>
+                            </ul>
+                        </li>
+                        <li class="priority-1">
+                            <strong>Fix Duplicate Functions</strong>
+                            <ul>
+                                <li>In <code>cg_storage_checker.py</code>: Merge both <code>check_home_loot()</code>
+                                    definitions</li>
+                                <li>In <code>config.py</code>: Keep only one <code>save_debug_screenshot()</code> (the
+                                    better one)</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="action-list">
+                    <h3>Phase 2: Fix Critical Bugs (2-3 hours)</h3>
+                    <ol start="4">
+                        <li class="priority-1">
+                            <strong>Fix config.json Naming</strong>
+                            <ul>
+                                <li>Change <code>"sieze machine"</code> → <code>"siege_machine"</code></li>
+                                <li>Change <code>"id1"</code> → actual unit name (dragon, barbarian, etc.)</li>
+                            </ul>
+                        </li>
+                        <li class="priority-1">
+                            <strong>Add Error Handling to find_and_click()</strong>
+                            <ul>
+                                <li>Wrap in try-except with logging</li>
+                                <li>Check for None returns and log failures</li>
+                            </ul>
+                        </li>
+                        <li class="priority-2">
+                            <strong>Remove Unused Imports</strong>
+                            <ul>
+                                <li>Run <code>pylint</code> or similar to find unused imports</li>
+                                <li>Remove all flagged imports</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="action-list">
+                    <h3>Phase 3: Refactor & Reorganize (4-6 hours)</h3>
+                    <ol start="7">
+                        <li class="priority-2">
+                            <strong>Create New Module Structure</strong>
+                            <ul>
+                                <li>Create folders: <code>core/</code>, <code>game_actions/</code>,
+                                    <code>tactics/</code>, <code>utils/</code>, <code>config/</code></li>
+                                <li>Move files to appropriate modules</li>
+                                <li>Add <code>__init__.py</code> files to all folders</li>
+                            </ul>
+                        </li>
+                        <li class="priority-2">
+                            <strong>Split config.py (400+ lines)</strong>
+                            <ul>
+                                <li>Extract vision code → <code>utils/vision.py</code></li>
+                                <li>Extract ADB code → <code>utils/adb_connector.py</code></li>
+                                <li>Extract logging → <code>utils/logger.py</code></li>
+                                <li>Extract constants → <code>utils/constants.py</code></li>
+                                <li>Keep only basic config values in main config</li>
+                            </ul>
+                        </li>
+                        <li class="priority-2">
+                            <strong>Break Down deploy_swarm.py (250+ lines)</strong>
+                            <ul>
+                                <li>Extract strategy loading → <code>_read_deployment_strategy()</code></li>
+                                <li>Extract point calculation → <code>_calculate_points()</code></li>
+                                <li>Extract debug visualization → <code>_draw_debug_map()</code></li>
+                                <li>Extract ADB commands → <code>_execute_adb_commands()</code></li>
+                                <li>Keep main function as orchestrator</li>
+                            </ul>
+                        </li>
+                        <li class="priority-3">
+                            <strong>Move Magic Numbers to Constants</strong>
+                            <ul>
+                                <li>Create <code>config/thresholds.py</code></li>
+                                <li>Move all hardcoded values there with meaningful names</li>
+                                <li>Import from constants instead of hardcoding</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="action-list">
+                    <h3>Phase 4: Optimize & Document (3-4 hours)</h3>
+                    <ol start="11">
+                        <li class="priority-3">
+                            <strong>Implement Improvements</strong>
+                            <ul>
+                                <li>Add template image caching to <code>vision.py</code></li>
+                                <li>Replace blocking sleeps with polling where possible</li>
+                                <li>Add parallel template matching for multiple buttons</li>
+                                <li>Migrate to Python <code>logging</code> module</li>
+                            </ul>
+                        </li>
+                        <li class="priority-3">
+                            <strong>Add Documentation</strong>
+                            <ul>
+                                <li>Update README.md with new structure</li>
+                                <li>Create ARCHITECTURE.md explaining module relationships</li>
+                                <li>Create SETUP.md for installation & configuration</li>
+                                <li>Add docstrings to all public functions</li>
+                            </ul>
+                        </li>
+                        <li class="priority-4">
+                            <strong>Create requirements.txt</strong>
+                            <ul>
+                                <li>Run <code>pip freeze > requirements.txt</code></li>
+                                <li>Manually review and clean up (remove unnecessary packages)</li>
+                                <li>Specify version constraints for critical packages</li>
+                            </ul>
+                        </li>
+                        <li class="priority-4">
+                            <strong>Add Unit Tests (Optional)</strong>
+                            <ul>
+                                <li>Create <code>tests/</code> folder</li>
+                                <li>Add tests for utility functions (vision, troop calculation, etc.)</li>
+                                <li>Use <code>pytest</code> or <code>unittest</code></li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="issue-card success" style="margin-top: 30px;">
+                    <strong>✓ Success Criteria for Refactoring:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>All duplicate files and functions removed</li>
+                        <li>No commented-out code blocks remain</li>
+                        <li>config.py reduced from 400+ to <100 lines</li>
+                        <li>deploy_swarm.py reduced from 250+ to <150 lines</li>
+                        <li>All modules have clear, single responsibilities</li>
+                        <li>All magic numbers moved to constants with meaningful names</li>
+                        <li>Proper error handling in all critical functions</li>
+                        <li>Bot functionality remains 100% identical</li>
+                        <li>Code is now maintainable, testable, and scalable</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- FILES NEEDING ATTENTION -->
+            <div class="section">
+                <h2>📋 Quick Reference: Files Requiring Action</h2>
+
+                <h3>DELETE Immediately:</h3>
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+                    <div class="issue-card error">deploy_swarm copy.py</div>
+                    <div class="issue-card error">deploy_swarm copy 2.py</div>
+                    <div class="issue-card error">base_scanner copy.py</div>
+                    <div class="issue-card error">tactics-old.py</div>
+                    <div class="issue-card error">storage_check1.py</div>
+                    <div class="issue-card error">new.py</div>
+                    <div class="issue-card error">error.py</div>
+                    <div class="issue-card error">ui.py</div>
+                    <div class="issue-card error">auto.py</div>
+                    <div class="issue-card error">worker/ (folder)</div>
+                    <div class="issue-card error">version/ (folder)</div>
+                </div>
+
+                <h3 style="margin-top: 30px;">FIX IMMEDIATELY:</h3>
+                <table style="margin-top: 15px; width: 100%;">
+                    <tr>
+                        <td style="width: 30%;"><code>cg_storage_checker.py</code></td>
+                        <td>Merge duplicate <code>check_home_loot()</code> functions</td>
+                    </tr>
+                    <tr>
+                        <td><code>config.py</code></td>
+                        <td>Remove duplicate <code>save_debug_screenshot()</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>start.py</code></td>
+                        <td>Delete lines 25-48 (commented old code)</td>
+                    </tr>
+                    <tr>
+                        <td><code>config.json</code></td>
+                        <td>Fix <code>"sieze machine"</code> → <code>"siege_machine"</code> and <code>"id1"</code> →
+                            real unit name</td>
+                    </tr>
+                </table>
+
+                <h3 style="margin-top: 30px;">REFACTOR (Priority Order):</h3>
+                <table style="margin-top: 15px; width: 100%;">
+                    <tr>
+                        <td style="width: 30%;"><strong>1. config.py</strong></td>
+                        <td>400+ lines - Split into: vision.py, adb_connector.py, logger.py, constants.py</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. deploy_swarm.py</strong></td>
+                        <td>250+ lines - Extract into smaller helper functions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. main.py</strong></td>
+                        <td>Extract watchdog & loop logic into orchestrator.py</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. All .py files</strong></td>
+                        <td>Move to appropriate module folders (core/, game_actions/, tactics/, utils/)</td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+
+        <footer>
+            <p>🤖 CoC Bot - Complete Project Analysis Report</p>
+            <p>Generated on: 2026-06-04 | Analysis Scope: 30+ Python files, 3 folders, 400+ code issues identified</p>
+            <p>Recommendation: Implement all Phase 1 & 2 fixes immediately, then proceed with Phase 3 & 4 refactoring
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Expand/collapse sections
+        document.querySelectorAll('.expansion-header').forEach(header => {
+            header.addEventListener('click', function (e) {
+                if (e.target.closest('.expansion-header')) {
+                    this.parentElement.classList.toggle('active');
+                }
+            });
+        });
+
+        // Smooth scroll for TOC links
+        document.querySelectorAll('.toc a').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

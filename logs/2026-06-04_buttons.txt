@@ -368,3 +368,6 @@
 [17:35:11] Clicked single_player_attack.png at (1473, 803)
 [17:35:28] Clicked next_base.png at (1505, 662)
 [17:35:51] Clicked next_base.png at (1381, 617)
+[22:13:30] Clicked main_attack_4.png at (63, 822)
+[22:13:35] Clicked find_match.png at (288, 649)
+[22:13:39] Clicked single_player_attack.png at (1459, 819)
