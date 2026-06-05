@@ -20,8 +20,13 @@ BUILDER_X = 750
 BUILDER_Y = 60   
 FIXED_TAP_X = 700  
 FIXED_TAP_Y = 700  
-POINT_A_X = 890  
-POINT_A_Y = 700  
+
+# Split upgrade buttons for Gold and Elixir
+GOLD_UPGRADE_X = 890   # Old POINT_A coordinates used for Gold
+GOLD_UPGRADE_Y = 700   
+ELIXIR_UPGRADE_X = 1050 # Change these coordinates if your Elixir button is elsewhere!
+ELIXIR_UPGRADE_Y = 680 # Adjust to match your Elixir button location
+
 POINT_B_X = 960  
 POINT_B_Y = 580  
 
@@ -38,7 +43,6 @@ SIMILAR_CHARS = {
     "9": ["q", "Q", "g"],
 }
 
-# Added the half-swipe function
 def scroll_half_down_builder_menu(region):
     print(" [Scroll] Performing half-scroll lookahead...")
     y1, y2, x1, x2 = region
@@ -49,14 +53,10 @@ def scroll_half_down_builder_menu(region):
     device.input_swipe(start_x, start_y, start_x, end_y, 400)
 
 def parse_wall_quantity(text_line):
-    """Extracts the number after 'Wall', forgiving OCR mistakes on the 'x'."""
-    # \D* means "ignore any characters that are NOT numbers" (like ' ', 'x', '*', etc.)
-    # \d+ means "capture the first group of numbers you find" (which is the quantity)
     match = re.search(r'wall\D*(\d+)', text_line, flags=re.I)
-    
     if match:
         return int(match.group(1))
-    return 0  # Default to 0 if OCR misses it entirely to avoid blind tapping
+    return 0 
     
 def parse_wall_cost(text_line):
     if "wall" not in text_line.lower():
@@ -73,7 +73,6 @@ def parse_wall_cost(text_line):
             numbers.append(int(digits))
     return max(numbers) if numbers else None
 
-# Grouped your exact OCR logic here so we can call it twice (before and after swipe)
 def scan_crop_for_walls(crop, x1, y1):
     gray = cv2.cvtColor(crop, cv2.COLOR_BGR2GRAY)
     inverted = cv2.bitwise_not(gray)
@@ -107,8 +106,6 @@ def scan_crop_for_walls(crop, x1, y1):
     
     return view_walls
 
-
-# --- REMOVED MAX_TAPS PARAMETER FOR TRUE UNCHAINED AUTOMATION ---
 def find_and_click_lowest_cost_wall(available_gold, available_elixir, max_scroll_steps=6):
     print("=== STEP 5: Finding & Clicking Lowest Cost Wall (Smart Scan) ===")
     print(f" [Budget] Live Gold: {available_gold:,} | Live Elixir: {available_elixir:,}")
@@ -127,29 +124,23 @@ def find_and_click_lowest_cost_wall(available_gold, available_elixir, max_scroll
             print(" [Error] Crop failed.")
             return
 
-        # 1. Read the screen using your logic
         current_view_walls = scan_crop_for_walls(crop, x1, y1)
 
-        # 2. If a wall is found, half-swipe and read AGAIN
         if current_view_walls:
             print(" [Found] Wall detected! Performing half-swipe to check for better options...")
             scroll_half_down_builder_menu(BUILDER_LIST_REGION)
             time.sleep(0.8)
             
-            # Get fresh screenshot and crop after the swipe
             new_screen = get_current_screen()
             new_crop = new_screen[y1:y2, x1:x2]
             
-            # Read the new screen using your exact logic
             final_view_walls = scan_crop_for_walls(new_crop, x1, y1)
             
-            # Safety fallback in case the swipe messed up the view
             if not final_view_walls:
                 final_view_walls = current_view_walls
         else:
             final_view_walls = []
 
-        # 3. Your original calculation and clicking logic
         if final_view_walls:
             lowest_wall = min(final_view_walls, key=lambda x: x["cost"])
             wall_cost = lowest_wall["cost"]
@@ -157,48 +148,54 @@ def find_and_click_lowest_cost_wall(available_gold, available_elixir, max_scroll
             
             print(f"\n [Found] Target Wall Cost: {wall_cost:,}")
             
-            # 1. Parse how many walls physically exist
             physical_walls_available = parse_wall_quantity(raw_text)
-            
-            # 2. Calculate how many upgrades your gold/elixir can afford
-            max_gold_upgrades = available_gold // wall_cost
-            max_elixir_upgrades = available_elixir // wall_cost
-            financial_affordable_walls = max(max_gold_upgrades, max_elixir_upgrades)
-            
-            # =========================================================
-            # DYNAMIC UNCACHED DECISION LOGIC
-            # =========================================================
-            # Picks the absolute lower value between physical capacity and bank capacity
-            actual_taps = min(financial_affordable_walls, physical_walls_available)
-            
-            print(f" ⭐ [Analysis] Budget can afford: {financial_affordable_walls} | Village has: {physical_walls_available}")
-            print(f" ⭐ [Decision] Bot has automatically set tap run sequence to: {actual_taps} taps.")
-            
-            if actual_taps == 0:
-                print(" [!] Safety Abort: 0 upgrades possible. Closing out.")
-                break
             
             # Target row select
             click_coordinates(lowest_wall["click_x"], lowest_wall["click_y"])
             time.sleep(1.2)  
             
-            # Run dynamic loops completely based on Bot decision
-            print(f" [Action] Firing {actual_taps} consecutive clicks on upgrade button...")
-            for i in range(actual_taps):
-                click_coordinates(FIXED_TAP_X, FIXED_TAP_Y)
-                print(f"   -> Tap {i+1}/{actual_taps} fired successfully")
-                time.sleep(0.25)
+            # =========================================================
+            # TWO-PASS UPGRADE LOGIC (GOLD THEN ELIXIR)
+            # =========================================================
+            remaining_walls = physical_walls_available
             
-            time.sleep(0.8)  
-            
-            # Post-Upgrade Sequence
-            print("\n--- RUNNING POST-UPGRADE SEQUENTIAL TAPS ---")
-            click_coordinates(POINT_A_X, POINT_A_Y)
-            time.sleep(1.0)
+            # Pass 1: Gold Upgrades
+            gold_taps = min(available_gold // wall_cost, remaining_walls)
+            if gold_taps > 0:
+                print(f" [Action] Firing {gold_taps} clicks for Gold upgrade...")
+                for i in range(gold_taps):
+                    click_coordinates(FIXED_TAP_X, FIXED_TAP_Y)
+                    time.sleep(0.25)
+                
+                time.sleep(0.8)  
+                print("--- RUNNING GOLD POST-UPGRADE SEQUENTIAL TAPS ---")
+                click_coordinates(GOLD_UPGRADE_X, GOLD_UPGRADE_Y)
+                time.sleep(1.0)
+                remaining_walls -= gold_taps
+            else:
+                print(" [Info] Skipping Gold upgrade (insufficient gold or no walls).")
+
+            # Pass 2: Elixir Upgrades
+            elixir_taps = min(available_elixir // wall_cost, remaining_walls)
+            if elixir_taps > 0:
+                print(f" [Action] Firing {elixir_taps} clicks for Elixir upgrade...")
+                for i in range(elixir_taps):
+                    click_coordinates(FIXED_TAP_X, FIXED_TAP_Y)
+                    time.sleep(0.25)
+                
+                time.sleep(0.8)  
+                print("--- RUNNING ELIXIR POST-UPGRADE SEQUENTIAL TAPS ---")
+                click_coordinates(ELIXIR_UPGRADE_X, ELIXIR_UPGRADE_Y)
+                time.sleep(1.0)
+                remaining_walls -= elixir_taps
+            else:
+                print(" [Info] Skipping Elixir upgrade (insufficient elixir or no walls remaining).")
+
+            # Final close tap (Point B)
             click_coordinates(POINT_B_X, POINT_B_Y)
             time.sleep(0.5)
             
-            print(" [Success] Dynamic safe wall loop complete!")
+            print(" [Success] Dynamic safe dual-loot wall loop complete!")
             return 
 
         if current_step < max_scroll_steps:
@@ -209,6 +206,5 @@ def find_and_click_lowest_cost_wall(available_gold, available_elixir, max_scroll
     print("\n [!] Exiting: Menu closed or sequence completed.")
     find_and_click("empty_grass.png", click=True)
 
-# Removed hardcoded fake numbers from test loop execution 
 if __name__ == "__main__":
     print(" [Info] Script ready. Call check_storage.py to execute loop with live parameters.")

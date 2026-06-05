@@ -6,7 +6,7 @@ import tactics
 def deploy_troops(starting_gold, starting_elixir):
     
     attack_start_time = time.time()
-    max_attack_duration = random.randint(90, 120)
+    max_attack_duration = random.randint(30, 40)
     print(f"\n [Attack] FUSE LIT: Total time limit set to {max_attack_duration} seconds!")
     
     print(" [Attack] Waiting for clouds to clear and base to load...")

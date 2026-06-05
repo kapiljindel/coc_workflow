@@ -1,2 +1,0 @@
-[19:48:16] Verification failed. Panic Dumping on edge.
-[19:48:24] Verification failed. Panic Dumping on edge.

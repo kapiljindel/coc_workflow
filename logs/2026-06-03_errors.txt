@@ -1,2 +1,0 @@
-[11:05:10] Watchdog triggered. Attempting recovery.
-[11:10:42] Watchdog triggered. Attempting recovery.

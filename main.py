@@ -37,6 +37,11 @@ def rest_countdown(seconds):
         seconds -= 1
     print("\n [Rest] Break complete. Booting up systems again!                    ")
 
+# try:
+#             push_data.execute_data_deployment_pipeline()
+# except Exception as pipeline_err:
+#             print(f"⚠️ [Pipeline Exception] Sync failed but continuing bot loop: {pipeline_err}")
+
 # --- STATS COUNTERS ---
 cycle_count = 0
 attack_count = 0
@@ -44,6 +49,7 @@ attack_count = 0
 try:
     while True:
         last_action_time = time.time() 
+        
         
         # --- Check if the start sequence actually worked ---
         if not start.go_to_base():
@@ -54,10 +60,6 @@ try:
         # ==========================================================
         # 🔥 RUN SEPARATE DATA PIPELINE AT THE FIRST PLACE 🔥
         # ==========================================================
-        try:
-            push_data.execute_data_deployment_pipeline()
-        except Exception as pipeline_err:
-            print(f"⚠️ [Pipeline Exception] Sync failed but continuing bot loop: {pipeline_err}")
         
         attack_completed = False
         rest_triggered = False

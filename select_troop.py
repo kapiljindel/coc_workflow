@@ -17,5 +17,5 @@ def select_troop(troop_name, slot_name):
     
     device.shell(f"input tap {tap_x} {tap_y}")
     
-    time.sleep(random.uniform(0.1, 0.2)) 
+    time.sleep(random.uniform(0.05, 0.08)) 
     return True

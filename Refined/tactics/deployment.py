@@ -225,6 +225,35 @@ def _deploy_heroes(troop_name: str, safe_points: List[Tuple[int, int]]) -> bool:
     
     device.shell(" && sleep 0.01 && ".join(tap_commands))
     logger.info(f"✓ {troop_name} deployed ({tap_count} taps)")
+    
+    # 🎯 NEW: Activate hero ability after deployment
+    try:
+        time.sleep(random.uniform(0.5, 1.0))  # Wait for hero to land
+        
+        # Get hero slot and tap to activate ability
+        from config.settings import get_config
+        config = get_config()
+        my_army = config.get("MY_ARMY", [])
+        
+        # Find the hero's slot in MY_ARMY
+        for unit in my_army:
+            if unit.get("name", "").lower() == troop_name.lower() and unit.get("category") == "hero":
+                slot_name = unit.get("slot", "")
+                if slot_name:
+                    # Get slot coordinates
+                    from tactics.troop_selection import get_army_slots
+                    army_slots = get_army_slots()
+                    if slot_name in army_slots:
+                        y1, y2, x1, x2 = army_slots[slot_name]
+                        ability_x = random.randint(x1 + 10, x2 - 10)
+                        ability_y = random.randint(y1 + 10, y2 - 10)
+                        device.shell(f"input tap {ability_x} {ability_y}")
+                        logger.info(f"✓ {troop_name} ability ACTIVATED!")
+                        time.sleep(random.uniform(0.2, 0.4))
+                break
+    except Exception as e:
+        logger.warning(f"Could not activate {troop_name} ability: {e}")
+    
     return True
 
 def _deploy_regular_troops(bunches: List[int], safe_points: List[Tuple[int, int]], 
