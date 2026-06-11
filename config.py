@@ -24,6 +24,7 @@ config = load_config()
 ADB_PORT = config["ADB_PORT"]
 # --- WALL UPGRADE LOGIC TOGGLE ---
 IS_UPGRADE_WALL = config["IS_UPGRADE_WALL"]
+IS_PUSH_JSON = config["IS_PUSH_JSON"]
 MINIMUM_GOLD = config["MINIMUM_GOLD"]
 MINIMUM_ELIXIR = config["MINIMUM_ELIXIR"]
 TOTAL_TROOPS = config["TOTAL_TROOPS"]
@@ -61,7 +62,7 @@ MY_ARMY = config["MY_ARMY"]
 
 # --- NEW: PERFORMANCE TOGGLE ---
 # Set to False to stop saving images to your hard drive every second!
-DEBUG_MODE = True 
+DEBUG_MODE = False 
 
 # --- VARIABLES ---
 ASSETS_PATH = "assets"
@@ -327,4 +328,5 @@ def scroll_down_builder_menu(region, loops=2):
     for i in range(loops):
         print(f" [Engine] Scrolling inside box (Swipe up from Y:{start_y} to Y:{end_y})...")
         device.shell(f"input swipe {start_x} {start_y} {end_x} {end_y} {duration}")
-        time.sleep(0.6) # Let the scrolling momentum come to a full stop
+        # time.sleep(0.6) # Let the scrolling momentum come to a full stop
+        time.sleep(random.uniform(0.15, 0.45))

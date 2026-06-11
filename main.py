@@ -1,6 +1,6 @@
 import sys, time, random, threading, os
 import start, loot_checker, attack, attack_end, cg_storage_checker, recovery
-from config import flush_logs, add_log, find_and_click, device
+from config import flush_logs, add_log, find_and_click, device , IS_PUSH_JSON
 
 # 🔥 IMPORT YOUR SEPARATE PIPELINE FILE HERE 🔥
 import push_data
@@ -46,10 +46,32 @@ def rest_countdown(seconds):
 cycle_count = 0
 attack_count = 0
 
+
 try:
     while True:
         last_action_time = time.time() 
         
+        
+        # ==========================================================
+        # 🔥 RUN SEPARATE DATA PIPELINE AT THE FIRST PLACE 🔥
+        # ==========================================================
+        if IS_PUSH_JSON:
+            try:
+                print(" [Pipeline] Executing data deployment pipeline...")
+                # Calling the function from push_data.py
+                push_data.execute_data_deployment_pipeline()
+                print(" [Pipeline] Data sync successful.")
+            except AttributeError as attr_err:
+                print(f"❌ [Pipeline Error] The function name in push_data.py doesn't match: {attr_err}")
+            except Exception as pipeline_err:
+                print(f"⚠️ [Pipeline Exception] Sync failed but continuing bot loop: {pipeline_err}")
+        else:
+            print(" [Pipeline] Skipped (IS_PUSH_JSON is set to False in config)")
+        
+        # --- Check if the start sequence actually worked ---
+        if not start.go_to_base():
+            print(" [System] Start sequence got stuck. Triggering Recovery...")
+
         
         # --- Check if the start sequence actually worked ---
         if not start.go_to_base():

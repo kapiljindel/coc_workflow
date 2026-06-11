@@ -148,7 +148,8 @@ def deploy_swarm(troop_name, category, bunches, all_side_points, panic_points, c
 
     # --- FAST VERIFICATION (TROOPS ONLY) ---
     if category == "troop":
-        time.sleep(0.1)
+        # time.sleep(0.01)
+        time.sleep(random.uniform(0.01, 0.02))
         end_img_path = os.path.join("assets", end_image)
         if not os.path.exists(end_img_path):
             print(f"   [!] Skipping verification: '{end_image}' missing.")
@@ -160,7 +161,8 @@ def deploy_swarm(troop_name, category, bunches, all_side_points, panic_points, c
                 
                 panic_pt = random.choice(panic_points)
                 device.shell(f"input swipe {panic_pt[0]} {panic_pt[1]} {panic_pt[0]} {panic_pt[1]} 80")
-                time.sleep(0.05)
+                # time.sleep(0.05)
+                time.sleep(random.uniform(0.01, 0.03))
 
     print(f" [Deploy] SUCCESS: {troop_name}s deployed.")
     return True

@@ -89,11 +89,11 @@ def run_four_step_pipeline(first_x, first_y, second_x, second_y, third_x, third_
     
     # 1. Tap the first button
     tap_coordinates(first_x, first_y, button_name="First Button")
-    time.sleep(1.5)
+    time.sleep(random.uniform(0.1, 0.2))
     
     # 2. Tap the second button
     tap_coordinates(second_x, second_y, button_name="Second Button")
-    time.sleep(1.0)
+    time.sleep(random.uniform(0.1, 0.2))
     
     # 3. Clean Swipe Sequence (Scroller)
     SWIPE_START_X = 1000
@@ -105,7 +105,7 @@ def run_four_step_pipeline(first_x, first_y, second_x, second_y, third_x, third_
     swipe_screen(SWIPE_START_X, SWIPE_START_Y, SWIPE_END_X, SWIPE_END_Y, duration=850)
     
     print("⏳ Waiting for swipe scrolling momentum to freeze...")
-    time.sleep(1.5)
+    time.sleep(random.uniform(0.1, 0.2))
 
     # 4. Tap the third button (Triggers the internal "Copy to Clipboard" action)
     tap_coordinates(third_x, third_y, button_name="Third Button")
@@ -118,7 +118,7 @@ def run_four_step_pipeline(first_x, first_y, second_x, second_y, third_x, third_
     max_retries = 6
     
     for attempt in range(max_retries):
-        time.sleep(0.5) 
+        time.sleep(random.uniform(0.1, 0.2)) 
         copied_data = pyperclip.paste()
         
         if copied_data != "":
@@ -135,9 +135,45 @@ def run_four_step_pipeline(first_x, first_y, second_x, second_y, third_x, third_
 
     print("✅ Full automation pipeline finished successfully!")
 
+
+# ... [Keep all your existing code exactly the same] ...
+
+def execute_data_deployment_pipeline():
+    """
+    Wrapper function so the main bot loop can trigger this pipeline 
+    automatically using your confirmed coordinates.
+    """
+    # 📍 Your confirmed coordinates
+    FIRST_BUTTON_X = 1532
+    FIRST_BUTTON_Y = 665
+    
+    SECOND_BUTTON_X = 819
+    SECOND_BUTTON_Y = 769
+    
+    THIRD_BUTTON_X = 1080  
+    THIRD_BUTTON_Y = 670  
+    
+    FOUR_BUTTON_X = 1290  
+    FOUR_BUTTON_Y = 98  
+
+    # Trigger the pipeline engine
+    run_four_step_pipeline(
+        FIRST_BUTTON_X, FIRST_BUTTON_Y, 
+        SECOND_BUTTON_X, SECOND_BUTTON_Y,
+        THIRD_BUTTON_X, THIRD_BUTTON_Y,
+        FOUR_BUTTON_X, FOUR_BUTTON_Y
+    )
+
 if __name__ == "__main__":
     print("Make sure BlueStacks is visible on your screen.")
     time.sleep(2) 
+    
+    # Now the manual tester runs the exact same wrapper function
+    execute_data_deployment_pipeline()
+
+# if __name__ == "__main__":
+#     print("Make sure BlueStacks is visible on your screen.")
+#     time.sleep(2) 
     
     # 📍 Your confirmed coordinates
     FIRST_BUTTON_X = 1532

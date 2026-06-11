@@ -4,10 +4,9 @@
     "MINIMUM_ELIXIR": 500000,
     "TOTAL_TROOPS": 120,
     "MAX_GOLD": 9250000,
-    "SUPABASE_URL": "https://your-project-id.supabase.co",
-    "SUPABASE_KEY": "your-supabase-api-key-here",
     "MAX_ELIXIR": 9250000,
     "IS_UPGRADE_WALL": false,
+    "IS_PUSH_JSON": true,
     "deploy_strategy": "all_sides",
     "Attack_type": [
         "circle",
@@ -20,7 +19,7 @@
         {
             "name": "id1",
             "category": "troop",
-            "count": 80
+            "count": 550
         },
         {
             "name": "sieze machine",
